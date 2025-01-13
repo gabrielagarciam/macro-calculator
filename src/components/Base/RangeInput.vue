@@ -2,7 +2,7 @@
   <div>
     <label
       :for="elementId"
-      class="block mb-2 text-sm font-medium text-gray-900"
+      class="block text-black/60 font-light mb-2"
       v-if="label"
     >
       {{ label }}

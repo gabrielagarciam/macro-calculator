@@ -16,7 +16,7 @@
             <div
               v-if="closeable || title"
               :class="[
-                'modal-header mb-6',
+                'modal-header my-6 ',
                 { 'justify-between': title, 'justify-end': !title },
               ]"
             >
@@ -91,21 +91,21 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .modal-backdrop {
-  @apply fixed top-0 left-0 w-full h-full bg-black/80 bg-opacity-50 z-40;
+  @apply fixed top-0 left-0 w-full h-full bg-black/80 bg-opacity-50 z-10;
 }
 
 .modal-wrapper {
-  @apply fixed top-0 left-0 right-0 bottom-0 z-50 m-auto flex items-center justify-center;
+  @apply fixed top-0 left-0 right-0 bottom-0 z-20 m-auto flex items-center justify-center;
 
   .modal-content {
-    @apply relative w-full flex flex-col py-4 max-w-screen-sm bg-white shadow rounded-2xl overflow-hidden max-h-[calc(100vh-36px)];
+    @apply relative w-full flex flex-col max-w-screen-sm bg-white shadow rounded-2xl overflow-hidden max-h-[calc(100vh-36px)];
 
     .modal-header {
       @apply flex items-center  h-4 w-full p-4;
     }
 
     .modal-body {
-      @apply px-6 h-full max-h-full overflow-x-hidden overflow-y-auto;
+      @apply px-0 h-full max-h-full overflow-x-hidden overflow-y-auto;
     }
   }
 }

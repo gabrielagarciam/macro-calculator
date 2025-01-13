@@ -2,41 +2,90 @@
   <div class="w-full">
     <label
       for="email"
-      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      class="text-black/60 font-light"
+      v-if="label"
     >
-      Email Address
+      {{ label }}
     </label>
     <input
       v-model="email"
       type="email"
       id="email"
       placeholder="name@example.com"
-      class="block w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      :class="[
+        'block w-full px-3 py-2 mt-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-transparent ',
+        {
+          'border-red-500 focus:border-transparent focus:ring focus:ring-red-500':
+            emailError,
+          'focus:border-transparent focus:ring focus:ring-black focus:ring-opacity-85':
+            !emailError,
+        },
+      ]"
+      @change="validateOnChange && validate(email) || emailError && validate(email)"
+      @blur="validateOnBlur && validate(email)"
     />
-    <p v-if="emailError" class="mt-2 text-sm text-red-600">
+    <p
+      :class="[
+        'text-[10px] text-red-500 h-2 mt-1',
+        { 'opacity-0': !emailError },
+      ]"
+    >
       {{ emailError }}
     </p>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { onMounted, ref } from "vue";
+
+const emit = defineEmits(["change"]);
+defineProps({
+  label: {
+    type: String,
+  },
+  validateOnChange: {
+    type: Boolean,
+    default: true,
+  },
+  validateOnBlur: {
+    type: Boolean,
+    default: true,
+  },
+});
+const modelValue = defineModel("modelValue", String, "");
 
 const email = ref("");
 const emailError = ref("");
 
-// Watch for changes in the email input
-watch(email, (newValue) => {
-  if (!validateEmail(newValue)) {
-    emailError.value = "Please enter a valid email address.";
-  } else {
-    emailError.value = "";
+// Function to validate email
+function validate(email) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  emailError.value = emailRegex.test(email)
+    ? ""
+    : "Por favor, ingresa un email válido";
+  handleEmailChange(email);
+  return emailError.value;
+}
+
+function handleEmailChange(value) {
+  if (emailError.value) {
+    emit("change", "");
+    emit("update:modelValue", "");
+    return;
   }
+  email.value = value;
+  modelValue.value = value;
+
+  emit("change", value);
+  emit("update:modelValue", value);
+}
+
+onMounted(() => {
+  email.value = modelValue.value;
 });
 
-// Function to validate email
-function validateEmail(email) {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return emailRegex.test(email);
-}
+// Expose the method to the parent component
+defineExpose({
+  validate,
+});
 </script>
