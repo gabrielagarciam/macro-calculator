@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col">
     <div>
-      <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
+      <h3 class="font-semibold text-lg">Tu Consumo Ideal de Macros</h3>
 
-      <ul class="macro-list my-8">
+      <ul class="macro-list mb-8 mt-4">
         <li
           v-for="(item, key) in object"
           :key="key"
@@ -15,7 +15,6 @@
           <span class="text-4xl font-bold">{{ item.value }}</span>
         </li>
       </ul>
-      
     </div>
   </div>
 </template>
@@ -29,18 +28,12 @@ const props = defineProps({
   goal: String,
 });
 
-const title = computed(
-  () =>
-    ({ cut: "", maintain: "", bulk: "Calorías para aumento de masa " }[
-      props.goal
-    ])
-);
 const object = reactive({
   totalCalories: {
     label: {
-      cut: "",
+      cut: "Calorías en déficit",
       maintain: "Calorías en Mantenimiento",
-      bulk: "Calorías para aumento de masa",
+      bulk: "Calorías en superávit",
     }[props.goal],
     value: "0",
   },
@@ -53,7 +46,6 @@ const object = reactive({
 });
 
 onMounted(() => {
-  console.log(props, props.totalCalories, props.macros);
   object.totalCalories.value = props.totalCalories;
   object.proteinGrams.value = props.macros.proteinGrams;
   object.fatGrams.value = props.macros.fatGrams;
