@@ -1,4 +1,3 @@
-
 export function useMacroCalculator() {
   // Factores de actividad física
   const activityFactors = {
@@ -7,6 +6,18 @@ export function useMacroCalculator() {
     moderatelyActive: 1.55,
     veryActive: 1.725,
     extremelyActive: 1.9,
+  };
+
+  // Conversión de unidades
+  const convertToMetric = ({ weight, height, system }) => {
+    if (system === 'imperial') {
+      // Convertir peso de libras a kilogramos y altura de pulgadas a centímetros
+      return {
+        weight: weight * 0.453592,
+        height: height * 2.54,
+      };
+    }
+    return { weight, height }; // Métrico
   };
 
   // Función para calcular la TMB (Tasa Metabólica Basal) usando la fórmula de Harris-Benedict
@@ -19,8 +30,11 @@ export function useMacroCalculator() {
   };
 
   // Función principal que calcula las calorías totales y la distribución de los macros
-  const calculateMacros = ({weight, height, age, gender, activityLevel, goal}) => {
-    const bmr = calculateBMR(weight, height, age, gender);
+  const calculateMacros = ({ weight, height, age, gender, activityLevel, goal, system = 'metric' }) => {
+    // Convertir unidades si es necesario
+    const { weight: metricWeight, height: metricHeight } = convertToMetric({ weight, height, system });
+
+    const bmr = calculateBMR(metricWeight, metricHeight, age, gender);
     let calories = bmr * activityFactors[activityLevel];
 
     // Ajustar según objetivo
