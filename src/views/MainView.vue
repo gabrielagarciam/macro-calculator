@@ -16,7 +16,7 @@
     <Modal
       v-model:open="isModalOpen"
       @close="modalIsOpenHandler"
-      title=" Calculadora de Macros"
+      title="Calculadora de Macros"
     >
        <MacroCalculator/>
 
