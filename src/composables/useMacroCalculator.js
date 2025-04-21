@@ -5,24 +5,11 @@ export function useMacroCalculator() {
     lightlyActive: 1.375,
     moderatelyActive: 1.55,
     veryActive: 1.725,
-    extremelyActive: 1.9,
-  };
-
-  // Conversión de unidades
-  const convertToMetric = ({ weight, height, system }) => {
-    if (system === 'imperial') {
-      // Convertir peso de libras a kilogramos y altura de pulgadas a centímetros
-      return {
-        weight: weight * 0.453592,
-        height: height * 2.54,
-      };
-    }
-    return { weight, height }; // Métrico
   };
 
   // Función para calcular la TMB (Tasa Metabólica Basal) usando la fórmula de Harris-Benedict
   const calculateBMR = (weight, height, age, gender) => {
-    if (gender === 'male') {
+    if (gender === "male") {
       return 10 * weight + 6.25 * height - 5 * age + 5;
     } else {
       return 10 * weight + 6.25 * height - 5 * age - 161;
@@ -30,28 +17,62 @@ export function useMacroCalculator() {
   };
 
   // Función principal que calcula las calorías totales y la distribución de los macros
-  const calculateMacros = ({ weight, height, age, gender, activityLevel, goal, system = 'metric' }) => {
-    // Convertir unidades si es necesario
-    const { weight: metricWeight, height: metricHeight } = convertToMetric({ weight, height, system });
+  const calculateMacros = ({
+    weight,
+    height,
+    age,
+    gender,
+    activityLevel,
+    goal,
+  }) => {
 
+    let metricWeight =
+      weight.unit == "kg" ? weight.value : weight.value * 0.453592; // Convertir peso de libras a kilogramos
+    let metricHeight = height.unit == "cm" ? height.value : height.value * 2.54; // Convertir altura de pulgadas a centímetros
     const bmr = calculateBMR(metricWeight, metricHeight, age, gender);
     let calories = bmr * activityFactors[activityLevel];
 
-    // Ajustar según objetivo
-    if (goal === 'cut') {
-      calories -= 500; // Déficit calórico
-    } else if (goal === 'bulk') {
-      calories += 500; // Superávit calórico
+    // Base calorie adjustment for goal
+    let calorieAdjustment = 500;
+
+    // Modify calorie adjustment based on activity level
+    if (activityLevel === "sedentary") {
+      calorieAdjustment *= 0.8; // Reduce adjustment for sedentary
+    } else if (activityLevel === "veryActive") {
+      calorieAdjustment *= 1.2; // Increase adjustment for very active
+    }
+    // moderatelyActive and lightlyActive can remain closer to the base
+
+    // Adjust according to goal
+    if (goal === "lose") {
+      calories -= Math.round(calorieAdjustment); // Apply adjusted deficit
+    } else if (goal === "gain") {
+      calories += Math.round(calorieAdjustment); // Apply adjusted surplus
     }
 
     calories = Math.max(calories, 1200); // Calorías mínimas recomendadas
 
     // Distribución predeterminada de macronutrientes
-    const macroDistribution = {
-      carbs: 50, // Porcentaje de carbohidratos
-      protein: 30, // Porcentaje de proteínas
-      fat: 20, // Porcentaje de grasas
+    let macroDistribution = {
+      carbs: 50,
+      protein: 30,
+      fat: 20,
     };
+
+    // Ajustar distribución de macronutrientes según objetivo (opcional)
+    if (goal === "lose") {
+      macroDistribution = {
+        carbs: 40, // Ligeramente más bajo
+        protein: 35, // Ligeramente más alto
+        fat: 25,   // Ligeramente más alto (for satiety)
+      };
+    } else if (goal === "gain") {
+      macroDistribution = {
+        carbs: 50,
+        protein: 35, // Ligeramente más alto
+        fat: 15,   // Ligeramente más bajo (prioritize carbs and protein)
+      };
+    }
 
     // Calcular gramos de cada macronutriente
     const proteinGrams = (calories * macroDistribution.protein) / 100 / 4;
