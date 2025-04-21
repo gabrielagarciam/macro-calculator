@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "apexcharts": "^4.3.0",
     "flowbite": "^2.5.2",
     "pinia": "^2.3.0",
