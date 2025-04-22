@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-primary/85 w-full h-full flex flex-col items-center">
-    <section class="w-full p-8 md:p-16">
+  <div class=" w-full h-full flex flex-col items-center">
+    <section class="w-full p-8 md:p-16 bg-primary/85">
       <div class="flex flex-col gap-1 mb-8 text-white">
         <h1
           class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl uppercase"
@@ -54,7 +54,7 @@
     </section>
 
     <section
-      class="w-full h-fit bg-green-500 text-white p-4 md:p-16 flex flex-col"
+      class="w-full h-fit bg-green-500 text-white p-8 md:p-16 flex flex-col"
     >
       <div class="flex flex-col gap-1 text-white">
         <h1 class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl">
