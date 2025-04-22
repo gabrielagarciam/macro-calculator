@@ -130,6 +130,7 @@ import BaseLevelSelector from "./BaseLevelSelector.vue";
 import { useMacroFormValidation } from "../composables/useMacroFormValidation";
 import { useMacroCalculator } from "../composables/useMacroCalculator";
 import { useEmail } from "../composables/useEmail";
+import { generateGuideUrl } from "../helpers/generateGuideUrl";
 
 const form = reactive({
   name: "",
@@ -211,6 +212,7 @@ const fields = ref({
 
 const isLoading = ref(false);
 const emailSent = ref(false);
+
 function handleValidate(field) {
   const { isValid, message } = {
     name: (value) => useMacroFormValidation().validateName(value),
@@ -248,8 +250,10 @@ function resetForm() {
 
 async function handleSubmit() {
   isLoading.value = true;
+
   const { isValid, fieldsValidations } =
     useMacroFormValidation().validateForm(form);
+
   if (!isValid) {
     Object.keys(fieldsValidations).forEach((key) => {
       fields.value[key] = {
@@ -262,15 +266,21 @@ async function handleSubmit() {
   }
 
   const results = useMacroCalculator().calculateMacros(form);
+  const guideLink = await generateGuideUrl({
+      ...results.macros,
+      calories: results.calories,
+      goal: form.goal,
+    })
+  
   try {
     await useEmail().sendMacroPlanEmail({
-      calorias: results.totalCalories,
+      calorias: results.calories,
       name: form.name,
       email: form.email,
-      // guideLink,
-      carb: results.macros.carbGrams,
-      fat: results.macros.fatGrams,
-      prot: results.macros.proteinGrams,
+      guideLink,
+      carb: results.macros.carbs,
+      fat: results.macros.fats,
+      prot: results.macros.protein,
     });
     emailSent.value = true;
     resetForm();
@@ -278,12 +288,11 @@ async function handleSubmit() {
     console.log("error", error);
   } finally {
     isLoading.value = false;
-   
   }
 }
 
 defineExpose({
   isLoading,
-  emailSent
+  emailSent,
 });
 </script>

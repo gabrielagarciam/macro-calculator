@@ -78,13 +78,13 @@ export function useMacroCalculator() {
     const proteinGrams = (calories * macroDistribution.protein) / 100 / 4;
     const fatGrams = (calories * macroDistribution.fat) / 100 / 9;
     const carbGrams = (calories * macroDistribution.carbs) / 100 / 4;
-
+    
     return {
-      totalCalories: Math.round(calories),
+      calories: Math.round(calories),
       macros: {
-        proteinGrams: Math.round(proteinGrams),
-        fatGrams: Math.round(fatGrams),
-        carbGrams: Math.round(carbGrams),
+        protein: Math.round(proteinGrams),
+        fats: Math.round(fatGrams),
+        carbs: Math.round(carbGrams),
       },
     };
   };

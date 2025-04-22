@@ -29,7 +29,7 @@
                 class="w-5 h-5 rounded-full border-none"
                 :class="selected === option.value ? 'bg-black/95' : 'bg-[#ffbda7d9]'"
               ></div>
-              <span :class="['text-sm uppercase', {'md:absolute md:bottom-0 md:-right-1/4': index + 1 === options.length}]">
+              <span :class="['text-sm uppercase', {'md:absolute md:bottom-0 md:-right-[10%]': index + 1 === options.length}]">
                 {{ option.label }}
               </span>
             </div>

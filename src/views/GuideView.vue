@@ -5,11 +5,10 @@
         <h1
           class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl uppercase"
         >
-          Your Macro Breakdown by Meal
+          Macro Breakdown & Daily Totals
         </h1>
         <p class="text-center text-sm sm:text-base">
-          Use this table to easily track your macros for each meal and stay on
-          top of your nutrition goals.
+          Track your macros per meal and see your daily totals at a glance.
         </p>
       </div>
 
@@ -18,27 +17,45 @@
       >
         <div
           class="flex-1 bg-white/85 p-6 rounded-lg shadow-md text-center transition-transform transform hover:scale-105"
-          v-for="(value, key) in plan"
-          :key="key"
+          v-for="(mealInfo, title) in plan"
+          :key="title"
         >
-          <p class="font-semibold text-xl capitalize m-0">{{ key }}</p>
+          <p class="font-semibold text-xl capitalize m-0">
+            {{ title }}
+          </p>
+
           <table class="w-full mt-4">
             <tr
-              v-for="(grams, label) in value"
+              v-if="!isLoading"
+              v-for="(grams, label) in mealInfo"
               :key="label"
               class="text-base leading-tight"
             >
-              <td class="font-semibold text-left capitalize">
-                {{ label }}
-              </td>
+              <td class="font-semibold text-left capitalize">{{ label }}</td>
               <td class="text-right">{{ grams }}</td>
+            </tr>
+            <tr v-else class="flex justify-between mb-4" v-for="_ in Array(3)">
+              <td class="rounded-md w-1/2 h-3 skeleton-loader"></td>
+              <td class="rounded-md w-1/4 h-3 skeleton-loader"></td>
             </tr>
           </table>
         </div>
       </div>
+
+      <div class="mt-10 text-center text-black font-poppins">
+        <h2 class="text-xl font-bold m-0">Total Daily Calories & Macros</h2>
+        <p class="text-sm sm:text-base mt-2">
+          <strong>Calories:</strong> {{ totalCalories }} |
+          <strong>Protein:</strong> {{ totalProtein }}g |
+          <strong>Carbs (Starches):</strong> {{ totalCarbs }}g |
+          <strong>Fat:</strong> {{ totalFat }}g
+        </p>
+      </div>
     </section>
 
-    <section class="w-full h-fit bg-green-500 text-white p-4 md:p-16 flex flex-col">
+    <section
+      class="w-full h-fit bg-green-500 text-white p-4 md:p-16 flex flex-col"
+    >
       <div class="flex flex-col gap-1 text-white">
         <h1 class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl">
           101 Guide: Know Your Macros
@@ -73,7 +90,7 @@
         </div>
       </div>
 
-      <div class="w-full  text-white font-poppins">
+      <div class="w-full text-white font-poppins">
         <div class="max-w-5xl mx-auto">
           <h2
             class="text-3xl sm:text-4xl font-bold text-center mb-8 uppercase text-white"
@@ -147,36 +164,31 @@
           Here are some expert tips and strategies to support your goal.
         </p>
       </div>
-      <!-- p-6 bg-white rounded-2xl shadow-md -->
-      <TipsAndTicks :goal="goal" />
+      <TipsAndTicks :goal="userGoal" />
     </section>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { useRoute } from "vue-router";
+import { onBeforeMount, reactive, ref } from "vue";
 import NutritionFactsLabel from "../components/NutritionFactsLabel.vue";
-import tipsInfo from "../constants/tips";
 import TipsAndTicks from "../components/TipsAndTicks.vue";
+import { getGeminiResponse } from "../services/gemini";
+import { createMacroMealPlanPrompt } from "../helpers/geminiPrompts";
 
-const goal = ref("lose");
-const plan = {
-  breakfast: {
-    fat: "15g",
-    protein: "20g",
-    starches: "30g",
-  },
-  lunch: {
-    fat: "12g",
-    protein: "25g",
-    starches: "40g",
-  },
-  dinner: {
-    fat: "18g",
-    protein: "30g",
-    starches: "25g",
-  },
-};
+const route = useRoute();
+const userGoal = ref("");
+const plan = ref({
+  breakfast: {},
+  lunch: {},
+  dinner: {},
+});
+const totalCalories = ref(0);
+const totalProtein = ref(0);
+const totalCarbs = ref(0);
+const totalFat = ref(0);
+const isLoading = ref(true);
 
 const servings = [
   {
@@ -195,4 +207,62 @@ const servings = [
     grams: "1g of fat",
   },
 ];
+
+onBeforeMount(async () => {
+  const { calories, carbs, fats, goal, protein } = route.query;
+  userGoal.value = goal;
+  totalCalories.value = calories;
+  totalProtein.value = protein;
+  totalCarbs.value = carbs;
+  totalFat.value = fats;
+
+  // Generate the prompt using the helper
+  const prompt = createMacroMealPlanPrompt(goal, protein, carbs, fats);
+
+  await fetchGeminiResponse(prompt);
+});
+
+const fetchGeminiResponse = async (prompt) => {
+  try {
+    const response = await getGeminiResponse(prompt);
+    plan.value = JSON.parse(response);
+  } catch (error) {
+    console.error("Error fetching Gemini response", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 </script>
+
+<style lang="scss">
+.skeleton-loader {
+  background-color: #f6f7ebd9; /* Fondo más claro */
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-loader::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #f2e6d9 25%,
+    #ebe6d9 50%,
+    #f2e6d9 75%
+  ); /* Tonos beige más suaves */
+  animation: loading 4s infinite;
+}
+
+@keyframes loading {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+</style>

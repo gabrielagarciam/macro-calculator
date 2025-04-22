@@ -22,10 +22,10 @@
       </div>
       <div class="flex flex-col gap-2 px-8 text-center">
         <p class="text-4xl font-bold">
-          ¡Tus macros han sido calculadas con éxito!
+          Your macros have been successfully calculated!
         </p>
         <p class="text-lg text-black my-4">
-          Recibirás un correo electrónico con la información.
+          You'll receive an email with the details.
         </p>
       </div>
     </div>
