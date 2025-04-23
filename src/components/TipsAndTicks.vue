@@ -9,7 +9,7 @@
         class="absolute top-2 right-0 left-0 m-auto md:right-[unset] md:left-2 md:top-0 md:bottom-0 w-12 md:rounded-l-xl flex items-center justify-center"
       >
         <h2
-          class="md:[writing-mode:vertical-rl] md:rotate-180 text-2xl font-bold text-center uppercase text-pink-500 drop-shadow-lg"
+          class=" md:rotate-90 text-2xl font-bold text-center uppercase text-pink-500 drop-shadow-lg"
         >
           {{ title }}
         </h2>

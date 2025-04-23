@@ -1,7 +1,28 @@
 <template>
-  <div class=" w-full h-full flex flex-col items-center">
-    <section class="w-full p-8 md:p-16 bg-primary/85">
-      <div class="flex flex-col gap-1 mb-8 text-white">
+  <div
+    class="w-full bg-black text-white text-sm md:text-base px-4 py-2 flex justify-between items-center z-50 fixed"
+  >
+    <span class="font-medium">Want to keep this guide?</span>
+    <button
+      @click="handleDownload"
+      class="bg-white text-black font-semibold px-4 py-1.5 rounded hover:bg-gray-100 transition-colors min-w-fit"
+    >
+      Download as PDF
+    </button>
+  </div>
+  <div class="w-full h-full flex flex-col items-center" ref="pdfContent">
+    <section
+      :class="[
+        'w-full  bg-primary/85',
+        {
+          'h-[1122px] max-h-[1122px] overflow-hidden p-8': isExporting,
+          '!pt-20 p-8 md:p-16': !isExporting,
+        },
+      ]"
+    >
+      <div
+        :class="['flex flex-col gap-1 mb-8 text-white ', { '': isExporting }]"
+      >
         <h1
           class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl uppercase"
         >
@@ -13,7 +34,10 @@
       </div>
 
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto font-poppins"
+        :class="[
+          'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto font-poppins',
+          { '!grid-cols-1': isExporting },
+        ]"
       >
         <div
           class="flex-1 bg-white/85 p-6 rounded-lg shadow-md text-center transition-transform transform hover:scale-105"
@@ -54,38 +78,53 @@
     </section>
 
     <section
-      class="w-full h-fit bg-green-500 text-white p-8 md:p-16 flex flex-col"
+      :class="[
+        'w-full h-fit bg-green-500 text-white  flex flex-col',
+        { 'h-[1122px] p-8': isExporting, 'p-8 md:p-16': !isExporting },
+      ]"
     >
-      <div class="flex flex-col gap-1 text-white">
-        <h1 class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl">
-          101 Guide: Know Your Macros
-        </h1>
-        <p class="text-center text-sm sm:text-base">
-          Use these as a quick reference to estimate your macros and make
-          smarter food choices.
-        </p>
-      </div>
+      <div :class="['flex flex-col']">
+        <div class="flex flex-col gap-1 text-white">
+          <h1 class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl">
+            101 Guide: Know Your Macros
+          </h1>
+          <p class="text-center text-sm sm:text-base">
+            Use these as a quick reference to estimate your macros and make
+            smarter food choices.
+          </p>
+        </div>
 
-      <div class="w-full flex flex-col my-14">
-        <h2
-          class="text-3xl sm:text-4xl font-bold text-center mb-8 uppercase text-white drop-shadow-lg hover:drop-shadow-2xl transition-all duration-300 ease-in-out"
-        >
-          What Does One Serving Mean?
-        </h2>
-
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto font-poppins"
-        >
-          <div
-            class="flex-1 bg-white/85 p-6 rounded-lg shadow-md text-center transition-transform transform hover:scale-105"
-            v-for="serving in servings"
-            :key="serving.title"
+        <div :class="['w-full flex flex-col my-14', { '!my-7': isExporting }]">
+          <h2
+            class="text-3xl sm:text-4xl font-bold text-center mb-8 uppercase text-white drop-shadow-lg hover:drop-shadow-2xl transition-all duration-300 ease-in-out"
           >
-            <div class="text-4xl mb-2">{{ serving.icon }}</div>
-            <p class="font-semibold text-lg text-black">{{ serving.title }}</p>
-            <p class="text-gray-600 text-sm">
-              1 serving = <strong>{{ serving.grams }}</strong>
-            </p>
+            What Does One Serving Mean?
+          </h2>
+
+          <div
+            :class="[
+              'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto font-poppins',
+              { '!grid-cols-3': isExporting },
+            ]"
+          >
+            <div
+              class="flex-1 bg-white/85 p-6 rounded-lg shadow-md text-center transition-transform transform hover:scale-105"
+              v-for="serving in servings"
+              :key="serving.title"
+            >
+              <div class="text-4xl mb-2">{{ serving.icon }}</div>
+              <p
+                :class="[
+                  'font-semibold text-lg text-black',
+                  { 'text-sm': isExporting },
+                ]"
+              >
+                {{ serving.title }}
+              </p>
+              <p class="text-gray-600 text-sm">
+                1 serving = <strong>{{ serving.grams }}</strong>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -98,14 +137,32 @@
             Flip It & Read It!
           </h2>
           <div
-            class="grid grid-cols-1 md:grid-cols-[auto_1fr] bg-transparent rounded-none shadow-none md:bg-white/85 md:rounded-lg md:shadow-md items-start md:p-10"
+            :class="[
+              {
+                'flex !p-2 bg-white/85 rounded-lg shadow-md': isExporting,
+                'grid md:p-10 grid-cols-1 md:grid-cols-[auto_1fr] bg-transparent md:bg-white/85 rounded-none shadow-none  md:rounded-lg md:shadow-md':
+                  !isExporting,
+              },
+            ]"
           >
-            <!-- Nutrition label -->
-            <NutritionFactsLabel />
+            <img
+              src="../assets/nutritionFactsLabel.jpg"
+              :class="[
+                'h-auto max-w-[12rem] scale-90 -mt-4',
+                { hidden: !isExporting },
+              ]"
+            />
+            <NutritionFactsLabel :class="[{ ' hidden': isExporting }]" />
 
-            <!-- Calculation explanation -->
             <div
-              class="text-black text-lg max-w-xl space-y-6 mt-8 md:mx-14 tracking-wide bg-white/85 rounded-lg p-4 py-8 shadow-md md:p-0 md:bg-transparent md:rounded-none md:shadow-none"
+              :class="[
+                'text-black tracking-wide',
+                {
+                  '!mx-4 !my-0 !text-sm !p-2  space-y-4': isExporting,
+                  'p-4 py-8 md:p-0  mt-8 md:mx-14 max-w-xl text-lg  space-y-6 bg-white/85 md:bg-transparent rounded-lg  shadow-md  md:rounded-none md:shadow-none':
+                    !isExporting,
+                },
+              ]"
             >
               <div>
                 <p class="font-semibold mb-1">Example:</p>
@@ -117,7 +174,6 @@
                 </ul>
               </div>
 
-              <!-- Macro breakdown card -->
               <div class="border border-black p-4 rounded-lg">
                 <p class="mb-2 text-black font-bold">🔢 Quick Math:</p>
                 <ul class="space-y-1 text-black">
@@ -139,7 +195,6 @@
                 </p>
               </div>
 
-              <!-- Final logging tip -->
               <div>
                 <p class="mb-2">✅ <strong>Log it like this:</strong></p>
                 <ul class="list-disc list-inside space-y-1">
@@ -153,7 +208,13 @@
         </div>
       </div>
     </section>
-    <section class="w-full p-8 md:p-16 bg-blue-600/85">
+
+    <section
+      :class="[
+        'bg-blue-600/85 w-full p-8 md:p-16',
+        { 'h-[1122px] p-8': isExporting },
+      ]"
+    >
       <div class="flex flex-col gap-1 mb-8 text-white">
         <h1
           class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl uppercase"
@@ -176,7 +237,10 @@ import NutritionFactsLabel from "../components/NutritionFactsLabel.vue";
 import TipsAndTicks from "../components/TipsAndTicks.vue";
 import { getGeminiResponse } from "../services/gemini";
 import { createMacroMealPlanPrompt } from "../helpers/geminiPrompts";
+import { downloadPDF } from "../helpers/pdf";
 
+const pdfContent = ref();
+const isExporting = ref(false);
 const route = useRoute();
 const userGoal = ref("");
 const plan = ref({
@@ -232,6 +296,14 @@ const fetchGeminiResponse = async (prompt) => {
     isLoading.value = false;
   }
 };
+
+async function handleDownload() {
+  if (pdfContent.value) {
+    isExporting.value = true;
+    await downloadPDF(pdfContent.value, "macro-guide");
+    isExporting.value = false;
+  }
+}
 </script>
 
 <style lang="scss">
@@ -264,5 +336,8 @@ const fetchGeminiResponse = async (prompt) => {
   100% {
     left: 100%;
   }
+}
+.page-break {
+  page-break-before: always;
 }
 </style>
