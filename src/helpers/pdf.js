@@ -6,7 +6,7 @@ export function downloadPDF(element, filename = "documento.pdf") {
       filename,
       margin: 0,
       html2canvas: { scale: 2 },
-      jsPDF: { unit: "px", format: "a4", orientation: "portrait" },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       pagebreak: { mode: ["css", "legacy"] }, // <== ¡Importante!
     })
     .from(element)
