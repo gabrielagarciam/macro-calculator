@@ -79,7 +79,7 @@
 
     <section
       :class="[
-        'w-full h-fit bg-green-500 text-white  flex flex-col',
+        'w-full h-fit bg-green-500 text-white  flex flex-col ',
         {
           'h-[1123px] max-h-[1123px] overflow-hidden p-8': isExporting,
           'p-8 md:p-16': !isExporting,
@@ -345,6 +345,7 @@ async function handleDownload() {
   }
 }
 .page-break {
-  page-break-before: always;
+  page-break-inside: avoid;
 }
+
 </style>
