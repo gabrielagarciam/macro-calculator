@@ -3,12 +3,15 @@
     class="w-full bg-black text-white text-sm md:text-base px-4 py-2 grid grid-cols-2 z-50 fixed"
   >
     <span class="font-medium">Want to keep this guide?</span>
-    <button
-      @click="handleDownload"
-      class="bg-white text-black font-semibold px-4 py-1.5 rounded hover:bg-gray-100 transition-colors min-w-fit"
-    >
-      Download as PDF
-    </button>
+    <div class="w-full flex justify-end">
+      <button
+        @click="handleDownload"
+        class="bg-white text-black font-semibold px-4 py-1.5 rounded hover:bg-gray-100 transition-colors min-w-fit w-fit "
+      >
+        Download as PDF
+      </button>
+
+    </div>
   </div>
   <div class="w-full h-full flex flex-col items-center" ref="pdfContent">
     <section
@@ -26,7 +29,7 @@
         >
           Macro Breakdown & Daily Totals
         </h1>
-        <p class="text-center text-sm sm:text-base">
+        <p :class="['text-center text-sm sm:text-base',{'mt-4':isExporting}]">
           Track your macros per meal and see your daily totals at a glance.
         </p>
       </div>
@@ -79,7 +82,7 @@
       :class="[
         'w-full h-fit bg-green-500 text-white  flex flex-col ',
         {
-          'h-[1122px] max-h-[1122px] overflow-hidden page-break p-8':
+          'h-[1123px] max-h-[1122px]  overflow-hidden page-break p-8':
             isExporting,
           'p-8 md:p-16': !isExporting,
         },
@@ -90,7 +93,7 @@
           <h1 class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl">
             101 Guide: Know Your Macros
           </h1>
-          <p class="text-center text-sm sm:text-base">
+          <p :class="['text-center text-sm sm:text-base', {'mt-4':isExporting}]">
             Use these as a quick reference to estimate your macros and make
             smarter food choices.
           </p>
@@ -215,7 +218,7 @@
       :class="[
         'bg-blue-600/85 w-full p-8 md:p-16',
         {
-          'h-[1122px] max-h-[1122px] overflow-hidden page-break p-8':
+          'h-[1123px] max-h-[1122px]  overflow-hidden page-break p-8':
             isExporting,
         },
       ]"
