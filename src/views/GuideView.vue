@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full bg-black text-white text-sm md:text-base px-4 py-2 flex justify-between items-center z-50 fixed"
+    class="w-full bg-black text-white text-sm md:text-base px-4 py-2 grid grid-cols-2 z-50 fixed"
   >
     <span class="font-medium">Want to keep this guide?</span>
     <button
@@ -81,7 +81,7 @@
       :class="[
         'w-full h-fit bg-green-500 text-white  flex flex-col',
         {
-          'h-[1122px] max-h-[1122px] overflow-hidden p-8': isExporting,
+          'h-[1123px] max-h-[1123px] overflow-hidden p-8': isExporting,
           'p-8 md:p-16': !isExporting,
         },
       ]"
@@ -236,7 +236,7 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { onBeforeMount, reactive, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { getGeminiResponse } from "../services/gemini";
 import { createMacroMealPlanPrompt } from "../helpers/geminiPrompts";
 import { downloadPDF } from "../helpers/pdf";
