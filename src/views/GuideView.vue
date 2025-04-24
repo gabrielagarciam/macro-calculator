@@ -82,7 +82,7 @@
       :class="[
         'w-full h-fit bg-green-500 text-white  flex flex-col ',
         {
-          'h-[1123px] max-h-[1122px]  overflow-hidden page-break p-8':
+          'h-[297mm] max-h-[297mm] min-h-[297mm]  overflow-hidden page-break p-8':
             isExporting,
           'p-8 md:p-16': !isExporting,
         },
