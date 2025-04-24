@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full bg-black text-white text-sm md:text-base px-4 py-2 grid grid-cols-2 z-50 fixed"
+    class="w-full bg-black text-white text-sm md:text-base px-4 py-2 grid grid-cols-2 items-center z-50 fixed"
   >
     <span class="font-medium">Want to keep this guide?</span>
     <div class="w-full flex justify-end">
