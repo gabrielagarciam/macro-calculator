@@ -212,6 +212,7 @@ const fields = ref({
 
 const isLoading = ref(false);
 const emailSent = ref(false);
+const emailNotSent = ref(false);
 
 function handleValidate(field) {
   const { isValid, message } = {
@@ -267,11 +268,11 @@ async function handleSubmit() {
 
   const results = useMacroCalculator().calculateMacros(form);
   const guideLink = await generateGuideUrl({
-      ...results.macros,
-      calories: results.calories,
-      goal: form.goal,
-    })
-  
+    ...results.macros,
+    calories: results.calories,
+    goal: form.goal,
+  });
+
   try {
     await useEmail().sendMacroPlanEmail({
       calorias: results.calories,
@@ -285,7 +286,7 @@ async function handleSubmit() {
     emailSent.value = true;
     resetForm();
   } catch (error) {
-    console.log("error", error);
+    emailNotSent.value = true;
   } finally {
     isLoading.value = false;
   }
@@ -294,5 +295,6 @@ async function handleSubmit() {
 defineExpose({
   isLoading,
   emailSent,
+  emailNotSent,
 });
 </script>

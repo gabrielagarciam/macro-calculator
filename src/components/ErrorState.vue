@@ -18,20 +18,30 @@
             stroke-linecap="round"
           />
         </svg>
-       
       </div>
-      <div class="flex flex-col gap-2 px-8 text-center">
+
+      <div class="flex flex-col items-center gap-4 px-8 text-center">
         <p class="text-4xl font-bold">
-          An error occurred while calculating your macros
+          Oops! Something went wrong.
         </p>
-        <p class="text-lg text-black my-4">
-          Please try again.
+        <p class="text-lg ">
+          Let’s refresh and try again.
         </p>
+        <button
+          @click="reloadPage"
+          class="mt-4 px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow hover:bg-red-600 transition w-fit"
+        >
+          Try again
+        </button>
       </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const reloadPage = () => {
+  window.location.reload()
+}
+</script>
 
 <style lang="scss" scoped></style>

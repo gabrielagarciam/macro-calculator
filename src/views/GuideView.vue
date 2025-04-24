@@ -80,7 +80,10 @@
     <section
       :class="[
         'w-full h-fit bg-green-500 text-white  flex flex-col',
-        { 'h-[1122px] p-8': isExporting, 'p-8 md:p-16': !isExporting },
+        {
+          'h-[1122px] max-h-[1122px] overflow-hidden p-8': isExporting,
+          'p-8 md:p-16': !isExporting,
+        },
       ]"
     >
       <div :class="['flex flex-col']">
@@ -228,16 +231,18 @@
       <TipsAndTicks :goal="userGoal" />
     </section>
   </div>
+  <ErrorNotification />
 </template>
 
 <script setup>
 import { useRoute } from "vue-router";
 import { onBeforeMount, reactive, ref } from "vue";
-import NutritionFactsLabel from "../components/NutritionFactsLabel.vue";
-import TipsAndTicks from "../components/TipsAndTicks.vue";
 import { getGeminiResponse } from "../services/gemini";
 import { createMacroMealPlanPrompt } from "../helpers/geminiPrompts";
 import { downloadPDF } from "../helpers/pdf";
+import NutritionFactsLabel from "../components/NutritionFactsLabel.vue";
+import TipsAndTicks from "../components/TipsAndTicks.vue";
+import ErrorNotification from "../components/ErrorNotification.vue";
 
 const pdfContent = ref();
 const isExporting = ref(false);
@@ -253,6 +258,7 @@ const totalProtein = ref(0);
 const totalCarbs = ref(0);
 const totalFat = ref(0);
 const isLoading = ref(true);
+const errorNotificationIsVisible = ref(false);
 
 const servings = [
   {
@@ -292,6 +298,7 @@ const fetchGeminiResponse = async (prompt) => {
     plan.value = JSON.parse(response);
   } catch (error) {
     console.error("Error fetching Gemini response", error);
+    errorNotificationIsVisible.value = true;
   } finally {
     isLoading.value = false;
   }

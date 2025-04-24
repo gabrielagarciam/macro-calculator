@@ -11,7 +11,7 @@
       </h3>
       <p class="text-lg leading-tight">4 servings per container</p>
       <!-- Serving Size -->
-      <div class="flex justify-between pb-3 border-b-8 border-black text-xl ">
+      <div class="flex justify-between pt-2  pb-1 border-b-8 border-black text-xl ">
         <p class="font-bold">Serving Size</p>
         <p class="font-semibold">1 1/2 cups</p>
       </div>
