@@ -20,9 +20,7 @@
         },
       ]"
     >
-      <div
-        :class="['flex flex-col gap-1 mb-8 text-white ', { '': isExporting }]"
-      >
+      <div :class="['flex flex-col gap-1 mb-8 text-white ']">
         <h1
           class="font-bowlby text-center text-3xl sm:text-4xl md:text-5xl uppercase"
         >
@@ -81,7 +79,8 @@
       :class="[
         'w-full h-fit bg-green-500 text-white  flex flex-col ',
         {
-          'h-[1123px] max-h-[1123px] overflow-hidden p-8': isExporting,
+          'h-[1122px] max-h-[1122px] overflow-hidden page-break p-8':
+            isExporting,
           'p-8 md:p-16': !isExporting,
         },
       ]"
@@ -215,7 +214,10 @@
     <section
       :class="[
         'bg-blue-600/85 w-full p-8 md:p-16',
-        { 'h-[1122px] p-8': isExporting },
+        {
+          'h-[1122px] max-h-[1122px] overflow-hidden page-break p-8':
+            isExporting,
+        },
       ]"
     >
       <div class="flex flex-col gap-1 mb-8 text-white">
@@ -347,5 +349,4 @@ async function handleDownload() {
 .page-break {
   page-break-inside: avoid;
 }
-
 </style>
