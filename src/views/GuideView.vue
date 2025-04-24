@@ -231,7 +231,7 @@
       <TipsAndTicks :goal="userGoal" />
     </section>
   </div>
-  <ErrorNotification />
+  <ErrorNotification v-if="errorNotificationIsVisible" />
 </template>
 
 <script setup>
