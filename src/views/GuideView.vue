@@ -279,7 +279,7 @@ const servings = [
   {
     icon: "🥑",
     title: "Fat",
-    grams: "1g of fat",
+    grams: "5g of fat",
   },
 ];
 
