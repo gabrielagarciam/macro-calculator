@@ -80,7 +80,9 @@
           >Activity level</label
         >
         <p class="text-xs text-black/85">
-          <b class="mr-1">{{activityDescriptions[form["activityLevel"]]['title']}}:</b>{{activityDescriptions[form["activityLevel"]]['description']}}
+          <b class="mr-1"
+            >{{ activityDescriptions[form["activityLevel"]]["title"] }}:</b
+          >{{ activityDescriptions[form["activityLevel"]]["description"] }}
         </p>
       </div>
 
@@ -134,22 +136,23 @@ import { generateGuideUrl } from "../helpers/generateGuideUrl";
 const activityDescriptions = {
   sedentary: {
     title: "Low",
-    description: "Minimal or no exercise, mostly sitting (e.g., desk job)."
+    description: "Minimal or no exercise, mostly sitting (e.g., desk job).",
   },
   lightlyActive: {
     title: "Medium",
-    description: "Light exercise 1-3 days a week (e.g., walking, light cycling)."
+    description:
+      "Light exercise 1-3 days a week (e.g., walking, light cycling).",
   },
   moderatelyActive: {
     title: "High",
-    description: "Moderate exercise 3-5 days a week (e.g., jogging, cycling)."
+    description: "Moderate exercise 3-5 days a week (e.g., jogging, cycling).",
   },
   veryActive: {
     title: "Very high",
-    description: "Intense exercise 6-7 days a week or physically demanding job."
-  }
+    description:
+      "Intense exercise 6-7 days a week or physically demanding job.",
+  },
 };
-
 
 const form = reactive({
   name: "",
@@ -269,8 +272,6 @@ function resetForm() {
 }
 
 async function handleSubmit() {
-  isLoading.value = true;
-
   const { isValid, fieldsValidations } =
     useMacroFormValidation().validateForm(form);
 
@@ -284,6 +285,12 @@ async function handleSubmit() {
     });
     return;
   }
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+  isLoading.value = true;
 
   const results = useMacroCalculator().calculateMacros(form);
   const guideLink = await generateGuideUrl({
